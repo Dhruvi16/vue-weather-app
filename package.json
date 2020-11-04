@@ -8,10 +8,28 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.32",
+    "@fortawesome/free-solid-svg-icons": "^5.15.1",
+    "@fortawesome/vue-fontawesome": "^2.0.0",
+    "axios": "^0.21.0",
+    "bootstrap-vue": "^2.18.1",
+    "bulma": "^0.9.1",
+    "bulma-carousel": "^4.0.4",
+    "chart.js": "^2.9.4",
     "core-js": "^3.6.5",
-    "vue": "^2.6.11"
+    "flat-icons": "^1.0.0",
+    "fusioncharts": "^3.15.3",
+    "moment": "^2.29.1",
+    "vee-validate": "^3.4.3",
+    "vue": "^2.6.11",
+    "vue-browser-geolocation": "^1.8.0",
+    "vue-carousel": "^0.18.0",
+    "vue-fusioncharts": "^3.0.4",
+    "vue-ripple-directive": "^2.0.1",
+    "vuejs-auto-complete": "^0.9.0"
   },
   "devDependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.1",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
