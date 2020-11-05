@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="container">
-    <SearchBar @emitCurrStateToParent="fetchWeather($event)" class="mt-3"></SearchBar>
+    <SearchBar @emitCurrStateToParent="fetchWeather($event)" class="m-3"></SearchBar>
     <div v-if="weather.cod == 200">
       <Carousel :per-page="3" :paginationEnabled="false" :centerMode="true" v-if="proccessedWeather"
         class="columns mt-4">
@@ -57,7 +57,7 @@ export default {
   name: 'App',
   data () {
     return {
-      api_key: '',
+      api_key: '0187a3b9de67848159f5fa95b0f54dd6',
       api_base: 'https://api.openweathermap.org/data/2.5',
       location:null,
       gettingLocation: false,

@@ -3,7 +3,7 @@
         <div class="field">
             <div class="control">
                 <autocomplete
-                    source="https://api.locationiq.com/v1/autocomplete.php?key={API_KEY}&q="
+                    source="https://api.locationiq.com/v1/autocomplete.php?key=pk.05cc2c0ca2586431890b4181b2bcdedd&q="
                     results-property="items" results-display="display_place" class="rounded"
                     @selected="addSelection">
                 </autocomplete>
