@@ -1,13 +1,13 @@
 <template>
     <div>
-        <div class="columns">
+        <div class="columns is-mobile">
             <div class="column is-one-half m-3">
                 <p class="is-size-5 has-text-weight-semibold">Pressure</p>
-                <p>{{this.pressure}}</p>
+                <p>{{this.pressure}} hpa</p>
             </div>
              <div class="column is-one-half m-3">
                 <p class="is-size-5 has-text-weight-semibold">Humidity</p>
-                <p>{{this.humidity}}</p>
+                <p>{{this.humidity}}%</p>
             </div>
         </div>
     </div>

@@ -1,20 +1,20 @@
 <template>
-  <div class="searchbox">
-      <div class="field">
-          <div class="control has-icons-left has-icons-right">
-              <input class="input rounded" type="email" v-model="query" placeholder="Search" value="Search" @change="emitCurrStateToParent()">
-              <span class="icon is-small is-left">
-                  <i class="fa fa-map-marker"></i>
-              </span>
-              <span class="icon is-small is-right">
-                  <i class="fa fa-search"></i>
-              </span>
-          </div>
-      </div>
-  </div>
+    <div class="searchbox">
+        <div class="field">
+            <div class="control">
+                <autocomplete
+                    source="https://api.locationiq.com/v1/autocomplete.php?key={API_KEY}&q="
+                    results-property="items" results-display="display_place" class="rounded"
+                    @selected="addSelection">
+                </autocomplete>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
+import Autocomplete from 'vuejs-auto-complete'
+
 export default {
   name: 'SearchBar',
   data () {
@@ -22,11 +22,19 @@ export default {
           query: ''
       }
   },
+  components: {
+      Autocomplete
+  },
   methods: {
-      emitCurrStateToParent () {
-        this.$emit("emitCurrStateToParent", this.query)
+      emitCurrStateToParent() {
+              this.$emit("emitCurrStateToParent", this.query)
+          },
+          addSelection(group) {
+              this.query = group.display
+              // access the autocomplete component methods from the parent
+              this.emitCurrStateToParent()
+          },
       }
-  }
 }
 </script>
 

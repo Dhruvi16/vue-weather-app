@@ -1,24 +1,45 @@
 <template>
   <div id="app" class="container">
-    <SearchBar @emitCurrStateToParent="fetchWeather($event)" class="m-2"></SearchBar>
-    <Carousel v-if="weather != {}" class="columns">
-      <div v-for="index in 39" :key="index">
-        <Slide
-          v-if="cardCondition (index)">
-          <DayCard :day="moment.unix(weather.list[index].dt).format('dddd')" :temp="weather.list[index].main.temp + '° C'"
-            :weather="weather.list[index].weather[0].description" :humidity="weather.list[index].main.humidity" :pressure="weather.list[index].main.pressure" :selected="selectStyles(moment.unix(weather.list[index].dt).format('dddd'))" @emitCurrStateToParent="selectDay($event)"></DayCard>
+    <SearchBar @emitCurrStateToParent="fetchWeather($event)" class="mt-3"></SearchBar>
+    <div v-if="weather.cod == 200">
+      <Carousel :per-page="3" :paginationEnabled="false" :centerMode="true" v-if="proccessedWeather"
+        class="columns mt-4">
+        <Slide class="column slide" v-for="weather in proccessedWeather" :key="weather">
+          <DayCard :day="weather.day" :temp="weather.temp" :weather="weather.weather" :humidity="weather.humidity"
+            :pressure="weather.pressure" :selected="selectStyles(weather.day)"
+            @emitCurrStateToParent="selectDay($event)"></DayCard>
         </Slide>
-      </div>
-    </Carousel>
-     <div class="card">
-            <div class="card-content">
-                <div class="content">
-                    <Details :temp="this.selectedTemp" :weather="this.selectedWeather"></Details>
-                    <Chart class="m-2"></Chart>
-                    <Pressure class="m-2" :pressure="this.selectedPressure" :humidity="this.selectedHumidity"></Pressure>
-                </div>
+        <Slide class="column slide">
+          <DayCard :day="'Sunday'" :temp="'23° C'" :weather="'Clear sky'" :humidity="'50'" :pressure="'1012'"></DayCard>
+        </Slide>
+        <Slide class="column slide">
+          <DayCard :day="'Sunday'" :temp="'23° C'" :weather="'Clear sky'" :humidity="'50'" :pressure="'1012'"></DayCard>
+        </Slide>
+      </Carousel>
+      <div class="card">
+        <div class="card-content">
+          <div class="content">
+            <Details :temp="this.selectedTemp" :weather="this.selectedWeather"></Details>
+            <div v-if="temp">
+              <Chart class="mt-6" :hour="hour" :temp="temp"></Chart>
             </div>
+            <Pressure class="mt-6" :pressure="this.selectedPressure" :humidity="this.selectedHumidity"></Pressure>
+          </div>
         </div>
+      </div>
+    </div>
+    <div v-else-if="weather.cod == 404" class="mt-3">
+      <article class="message is-danger">
+        <div class="message-header">
+          <p>Error</p>
+          <button class="delete" aria-label="delete"></button>
+        </div>
+        <div class="message-body">
+          We cannot process the request, try to add another city or try to reload the website
+        </div>
+      </article>
+    </div>
+    
   </div>
 </template>
 
@@ -31,22 +52,26 @@ import Chart from './components/Chart'
 import Pressure from './components/Pressure'
 import { Carousel, Slide } from 'vue-carousel';
 
+
 export default {
   name: 'App',
   data () {
     return {
-      api_key: '0187a3b9de67848159f5fa95b0f54dd6',
+      api_key: '',
       api_base: 'https://api.openweathermap.org/data/2.5',
       location:null,
       gettingLocation: false,
       errorStr:null,
-      currentCity: '',
       selectedDay: '',
       selectedTemp: '',
       selectedWeather: '',
       selectedPressure: '',
       selectedHumidity: '',
-      weather: {}
+      lastDay: '',
+      weather: {},
+      proccessedWeather: [],
+      hour: [],
+      temp: []
     }
   },
   components: {
@@ -54,7 +79,7 @@ export default {
     DayCard,
     Details,
     Chart,
-    Pressure,
+    Pressure, 
     Carousel,
     Slide
   },
@@ -67,12 +92,15 @@ export default {
     },
     setResults (results) {
       this.weather = results;
+      this.proccessedWeather = []
       this.selectedDay = moment.unix(this.weather.list[0].dt).format('dddd');
       this.selectedTemp = this.weather.list[0].main.temp + '° C';
       this.selectedWeather = this.weather.list[0].weather[0].description;
       this.selectedPressure = this.weather.list[0].main.pressure;
       this.selectedHumidity = this.weather.list[0].main.humidity;
       this.selectStyles (this.selectedDay)
+      this.processWeathertoRequired();
+      this.processTemperature(this.selectedDay);
     },
     cardCondition (index) {
       if (moment.unix(this.weather.list[index].dt).format('dddd') != moment.unix(this.weather.list[index - 1].dt).format('dddd') || index == 0) {
@@ -87,6 +115,22 @@ export default {
         .then(res => {
           return res.json();
         }).then(this.setResults);
+      
+    },
+    processWeathertoRequired () {
+      let i = 1;
+      while (i < 39) {
+            if (moment.unix(this.weather.list[i].dt).format('dddd') != moment.unix(this.weather.list[i - 1].dt).format('dddd')) {
+              this.proccessedWeather.push( {
+                day: moment.unix(this.weather.list[i].dt).format('dddd'),
+                temp: this.weather.list[i].main.temp + '° C',
+                weather: this.weather.list[i].weather[0].description,
+                humidity: this.weather.list[i].main.humidity,
+                pressure: this.weather.list[i].main.pressure,
+              })
+            }
+        i++;
+      }
     },
     selectDay (day) {
       this.selectedDay = day.x;
@@ -94,6 +138,19 @@ export default {
       this.selectedWeather = day.y;
       this.selectedHumidity = day.w;
       this.selectedPressure = day.t;
+      this.temp = []
+      this.hour = []
+      this.processTemperature(this.selectedDay);
+    },
+    processTemperature (day) {
+      let i = 1;
+      while (i < 39) {
+            if (moment.unix(this.weather.list[i].dt).format('dddd') == day) {
+              this.temp.push(this.weather.list[i].main.temp)
+              this.hour.push(moment.unix(this.weather.list[i].dt).format('HH'))
+            }
+        i++;
+      }
     },
     selectStyles (day) {
       if (this.selectedDay == day) {
@@ -121,15 +178,14 @@ export default {
       this.gettingLocation = false;
       this.errorStr = err.message;
     })
+    
 }
 }
 </script>
 
 <style>
-.scrolling-wrapper {
-  overflow-x: scroll;
-  overflow-y: hidden;
-  white-space: nowrap;
+.slide {
+  height: 100%;
 }
 
 </style>

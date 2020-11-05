@@ -1,5 +1,5 @@
 <template>
-    <div class="column is-full">
+    <div>
         <a @click="emitCurrStateToParent()">
         <div class="card has-text-centered is-shadowless" :class ="(selected)?'selected':'not-selected'">
             <div class="card-content">

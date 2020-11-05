@@ -7,7 +7,7 @@ import moment from 'moment'
 import 'chart.js'
 import VueGeolocation from 'vue-browser-geolocation';
 import VueCarousel from 'vue-carousel';
-
+ 
 Vue.use(VueCarousel);
 Vue.use(VueGeolocation);
 Vue.prototype.moment = moment

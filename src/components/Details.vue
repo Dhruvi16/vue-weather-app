@@ -1,9 +1,9 @@
 <template>
     <div>
-        <div class="columns">
-            <p class="big-title column is-marginless is-3">{{this.temp}}</p>
-            <div class="column is-marginless">
-                <figure class="image is-64x64">
+        <div class="big-title is-flex is-vertical-center">
+            
+                {{this.temp}}
+                
                         <img src="../assets/weather/sun.svg" v-if="weather == 'clear sky'">
                         <img src="../assets/weather/clouds-and-sun.svg" v-else-if="weather == 'few clouds'">
                         <img src="../assets/weather/cloud.svg" v-else-if="weather == 'scattered clouds'">
@@ -14,10 +14,9 @@
                         <img src="../assets/weather/snowflake.svg" v-else-if="weather == 'snow'">
                         <img src="../assets/weather/wind.svg" v-else-if="weather == 'mist'">
                         <img src="../assets/weather/thermometer.svg" v-else>
-                </figure>
-            </div>
-            <div class="column"></div>
-            <div class="column"></div>
+               
+        
+            
         </div>
     </div>
 </template>
@@ -46,8 +45,18 @@ export default {
 .card {
   overflow-x: auto;
 }
+img {
+    width: 96px;
+    height: 96px;
+    padding-left: 16px ;
+}
 .big-title {
-    font-size: 3.25rem;
+    font-size: 3rem;
+    font-weight: bold;
+}
+.is-vertical-center {
+  display: flex;
+  align-items: center;
 }
 
 </style>

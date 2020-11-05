@@ -1,112 +1,82 @@
 <template>
-    <div>
-       <canvas id="myChart"></canvas>
-    </div>
+  <div class="small">
+    <line-chart :chart-data="datacollection" :options="datacollection.options" ></line-chart>
+  </div>
 </template>
 
 <script>
-import Chart from 'chart.js'
-export default {
-  name: 'Chart',
-  props: [
-      'day',
-      'weather'
-  ],
-  data () {
+  import LineChart from './LineChart.js'
+
+  export default {
+    components: {
+      LineChart
+    },
+    props: [
+        'hour',
+        'temp'
+    ],
+    data () {
       return {
-          chart: null,
-          dates: [1,2,3,4,5,6],
-          temps: [20.5,20.8,21,21.6,22,21.8,21.9]
+        datacollection: null
       }
+    },
+    mounted () {
+      this.fillData()
+    },
+    watch: {
+    temp: function () {
+      this.fillData()
+    }
   },
-  methods: {
-      generateChart() {
-          var ctx = document.getElementById("myChart");
-          this.chart = new Chart(ctx, {
-              type: "line",
-              data: {
-                  labels: this.dates,
+    methods: {
+      fillData() {
+          this.datacollection = {
+              labels: this.hour,
+              datasets: [{
 
-                  datasets: [{
-                      label: "Avg. Temp during the day",
-                      backgroundColor: "rgba(54, 162, 235, 0.5)",
-                      borderColor: "rgb(54, 162, 235)",
-                      fill: false,
-                      data: this.temps
-                  }]
-              },
+                  data: this.temp,
+                  fill: false,
+                  borderColor: '#0099CC',
+                  backgroundColor: '#0099CC',
+                  borderWidth: 2,
+                  pointBackgroundColor: "#ffffff"
+              }],
               options: {
-                  title: {
-                      display: false,
-                      text: ""
-                  },
-                  tooltips: {
-                      callbacks: {
-                          label: function (tooltipItem, data) {
-                              var label =
-                                  data.datasets[tooltipItem.datasetIndex].label || "";
-
-                              if (label) {
-                                  label += ": ";
-                              }
-
-                              label += Math.floor(tooltipItem.yLabel);
-                              return label + "°F";
-                          }
-                      }
-                  },
                   scales: {
-                      xAxes: [{
-                          type: "time",
-                          time: {
-                              unit: "hour",
-                              displayFormats: {
-                                  hour: "M/DD @ hA"
-                              },
-                              tooltipFormat: "MMM. DD @ hA"
+                      yAxes: [{
+                          gridLines: {
+                              display: false
                           },
                           scaleLabel: {
                               display: true,
-                              labelString: "Time"
-                          },
-                          gridLines: {
-                            drawOnChartArea: true,
-                            display: true
+                              labelString: 'Temperature'
+                          }
 
-                        }   
                       }],
-                      yAxes: [{
-                          display: false,
-                          scaleLabel: {
-                              display: false,
-                          },
+                      xAxes: [{
                           gridLines: {
-                            display: false
+                              display: true
+                          },
+                          scaleLabel: {
+                              display: true,
+                              labelString: 'Hours'
+                          }
 
-                        }  
                       }]
-                  }
+                  },
+                  legend: {
+                      display: false
+                  },
+                  responsive: true,
+                  maintainAspectRatio: false
               }
-          });
-      }
-  },
-   mounted: function () {
-    this.generateChart()
- },
+
+          }
+      },
+    }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-.has-image-centered {
-  margin-left: auto;
-  margin-right: auto;
-}
-.card {
-  overflow-x: auto;
-}
-.big-title {
-    font-size: 4rem;
-}
+<style>
 
 </style>
